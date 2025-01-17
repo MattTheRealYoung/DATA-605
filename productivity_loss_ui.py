@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-import webbrowser
 import os
+import smtplib
 
 # Get the directory of the current script
 current_dir = os.path.dirname(__file__)
@@ -56,6 +56,28 @@ def user_input():
 
     return sick_leave_hours, turnover_month, presenteeism_productivity_loss
 
+# Define the send email function
+def send_email(sender_email, password):
+    try:
+        # Gmail SMTP configuration
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+
+        # Email content
+        subject = "Productivity loss enquire"
+        body = "I am interested in the productivity loss, and like to know more about the reduce of productivity loss"
+        message = f"Subject: {subject}\n\n{body}"
+
+        # Connect to Gmail SMTP server and send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()  
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message)
+
+        st.success(f"Email sent successfully to {receiver_email}!")
+    except Exception as e:
+        st.error(f"Failed to send email: {e}")
+
 # Gather inputs
 sick_leave_hours, turnover_month, presenteeism_productivity_loss = user_input()
 
@@ -73,5 +95,15 @@ st.subheader("Predicted Productivity Loss")
 st.markdown(f"<h1 style='text-align: center; color: red;'>${predicted_loss:,.2f}</h1>", unsafe_allow_html=True)
 
 # Add a button to call ERA
-if st.button("Call ERA"):
-    webbrowser.open("https://nz.eragroup.com/")
+st.write("Enter gmail credentials below:")
+sender_email = st.text_input("Sender Email")
+password = st.text_input("Password", type="password")
+receiver_email = st.text_input("Receiver Email", "rhofmans@eragroup.com")
+
+# Button logic
+if st.button("Contact ERA Group"):
+    if sender_email and password and receiver_email:
+        send_email(sender_email, password, receiver_email)
+    else:
+        st.error("Please fill in all fields.")
+
