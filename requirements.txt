@@ -3,5 +3,4 @@ joblib
 pandas
 numpy
 scikit-learn
-smtplib
 os
