@@ -90,15 +90,20 @@ input_data = pd.DataFrame({
 # Predict productivity loss using the model
 predicted_loss = model.predict(input_data)[0] + presenteeism_productivity_loss
 
+# Display formula
+st.subheader("Productivity Loss Formula")
+st.markdown(f"<p style='text-align: center; color: black;'>Total Productivity Loss = Sick Leave Loss + Replacement Loss + Presenteeism Loss</p>", unsafe_allow_html=True)
+
 # Display results
-st.subheader("Predicted Productivity Loss")
+st.subheader("Predicted Total Productivity Loss")
 st.markdown(f"<h1 style='text-align: center; color: red;'>${predicted_loss:,.2f}</h1>", unsafe_allow_html=True)
+st.markdown(f"<p style='text-align: right; color: black;'>The calculation is based on facility management industry</p>", unsafe_allow_html=True)
 
 # Add a button to call ERA
 st.write("Enter gmail credentials below:")
 sender_email = st.text_input("Sender Email")
 password = st.text_input("Password", type="password")
-receiver_email = st.text_input("Receiver Email", "rhofmans@eragroup.com")
+receiver_email = "rhofmans@eragroup.com"
 
 # Button logic
 if st.button("Contact ERA Group"):
